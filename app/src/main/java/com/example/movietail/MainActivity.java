@@ -7,11 +7,14 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.androdocs.httprequest.HttpRequest;
 import com.bumptech.glide.Glide;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.json.JSONObject;
 
@@ -19,10 +22,12 @@ public class MainActivity extends AppCompatActivity {
 
     ImageView poster;
     EditText movie;
-    ImageView search;
+    LinearLayout tobeshowed;
+    RelativeLayout search;
     String moviename;
-    String API = "";//<----Enter here your API key from http://www.omdbapi.com/
-    TextView title,released,genre,runtime,director,actors,country,awards,plot,rate,language;
+    boolean clicked = true;
+    String API = "cd39e789";//<----Enter here your API key from http://www.omdbapi.com/
+    TextView title,released,genre,runtime,director,actors,country,awards,plot,rate,language,show_more;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         movie = (EditText)findViewById(R.id.movie);
-        search = (ImageView) findViewById(R.id.button);
+        search = (RelativeLayout) findViewById(R.id.search);
         poster = (ImageView) findViewById(R.id.poster);
         title = (TextView)findViewById(R.id.title);
         released = (TextView)findViewById(R.id.released);
@@ -43,9 +48,8 @@ public class MainActivity extends AppCompatActivity {
         rate = (TextView)findViewById(R.id.rate);
         plot = (TextView)findViewById(R.id.plot);
         language = (TextView)findViewById(R.id.language);
-
-
-
+        show_more = findViewById(R.id.show_more);
+        tobeshowed = findViewById(R.id.tobeshowed);
 
         search.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,12 +65,13 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            show_more.setVisibility(View.INVISIBLE);
+            tobeshowed.setVisibility(View.GONE);
         }
 
         @Override
         protected String doInBackground(String... args) {
-            String response = HttpRequest.excuteGet("https://www.omdbapi.com/?apikey="+API+"&t="+moviename);
-            return response;
+            return HttpRequest.excuteGet("https://www.omdbapi.com/?apikey="+API+"&t="+moviename);
         }
 
         @Override
@@ -92,6 +97,21 @@ public class MainActivity extends AppCompatActivity {
                 String plot_data = jsonObj.getString("Plot");
 
 
+
+                show_more.setVisibility(View.VISIBLE);
+                show_more.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (clicked) {
+                            tobeshowed.setVisibility(View.VISIBLE);
+                            clicked =false;
+                        }
+                        else {
+                            tobeshowed.setVisibility(View.GONE);
+                            clicked =true;
+                        }
+                    }
+                });
 
                 //SET DATA IN ACTIVITY :
                 Glide.with(getApplicationContext()).load(poster_image).into(poster);

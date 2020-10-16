@@ -1,3 +1,20 @@
 <resources>
     <string name="app_name">Movie Tail</string>
+    <string name="enter_movie_name">Enter Movie Name</string>
+    <string name="genre">GENRE</string>
+    <string name="runtime">RUNTIME</string>
+    <string name="country">Country :</string>
+    <string name="language">LANGUAGE</string>
+    <string name="director">Director</string>
+    <string name="actors">ACTORS</string>
+    <string name="awards">AWARDS</string>
+    <string name="imdb_rating">IMDB RATING</string>
+    <string name="plots">Plots</string>
+    <string name="rating">Rating</string>
+    <string name="directed_by">Directed by : </string>
+    <string name="name">Name</string>
+    <string name="movie_title">Movie Title</string>
+    <string name="release_date">Release date</string>
+    <string name="show_more">Show more..</string>
+    <string name="movie_tale">Movie Tale</string>
 </resources>
