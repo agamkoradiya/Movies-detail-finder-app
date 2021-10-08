@@ -1,2 +1,3 @@
 # Movies-detail-finder-app
-![Frame 285](https://user-images.githubusercontent.com/61702243/96203241-fc697e00-0f7e-11eb-8ba9-abee6da538ad.png)
+
+![Group 884](https://user-images.githubusercontent.com/68895339/136618983-a68aaad1-68d6-4bc4-bb0d-5ee2080edb2f.png)
