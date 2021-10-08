@@ -1,10 +1,15 @@
 package com.example.movietail;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -26,7 +31,11 @@ public class MainActivity extends AppCompatActivity {
     RelativeLayout search;
     String moviename;
     boolean clicked = true;
-    String API = "cd39e789";//<----Enter here your API key from http://www.omdbapi.com/
+    ConstraintLayout layout;
+    View loading;
+    FloatingActionButton share;
+    TextView message;
+    String API = "b7de8f4e";//<----Enter here your API key from http://www.omdbapi.com/
     TextView title,released,genre,runtime,director,actors,country,awards,plot,rate,language,show_more;
 
     @Override
@@ -51,14 +60,56 @@ public class MainActivity extends AppCompatActivity {
         show_more = findViewById(R.id.show_more);
         tobeshowed = findViewById(R.id.tobeshowed);
 
+        message=findViewById(R.id.message);
+        layout=findViewById(R.id.container);
+        loading=findViewById(R.id.include);
+        share=findViewById(R.id.sharenote);
+
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+
         search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                moviename=movie.getText().toString();
-                new movieTask().execute();
+                if (!movie.getText().toString().isEmpty()) {
+                    moviename = movie.getText().toString();
+                    loading.setVisibility(View.VISIBLE);
+                    layout.setVisibility(View.VISIBLE);
+                    message.setVisibility(View.GONE);
+                    share.setVisibility(View.VISIBLE);
+                    new movieTask().execute();
+                }
+                else{
+                    Toast.makeText(MainActivity.this, "Type something to search", Toast.LENGTH_LONG).show();
+                }
+            }
+
+        });
+
+        movie.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                if(i== EditorInfo.IME_ACTION_SEARCH) {
+                    if(!movie.getText().toString().isEmpty()) {
+                        moviename=movie.getText().toString();
+                        loading.setVisibility(View.VISIBLE);
+                        layout.setVisibility(View.VISIBLE);
+                        message.setVisibility(View.GONE);
+                        share.setVisibility(View.VISIBLE);
+                        new movieTask().execute();
+                    }
+                    else{
+                        Toast.makeText(MainActivity.this, "Type something to search", Toast.LENGTH_LONG).show();
+                    }
+                    return true;
+                }
+                return false;
             }
         });
+
+
     }
+
+
 
     class movieTask extends AsyncTask<String,Void,String> {
 
@@ -77,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String result) {
             try {
-
+                loading.setVisibility(View.GONE);
                 //JSON OBJECT :
                 JSONObject jsonObj = new JSONObject(result);
              //   JSONObject rate = jsonObj.getJSONArray("Ratings").getJSONObject(1);
@@ -104,10 +155,12 @@ public class MainActivity extends AppCompatActivity {
                     public void onClick(View v) {
                         if (clicked) {
                             tobeshowed.setVisibility(View.VISIBLE);
+                            show_more.setText(R.string.show_less);
                             clicked =false;
                         }
                         else {
                             tobeshowed.setVisibility(View.GONE);
+                            show_more.setText(R.string.show_more);
                             clicked =true;
                         }
                     }
@@ -137,4 +190,18 @@ public class MainActivity extends AppCompatActivity {
 
         }
     }
+
+    public void ShareNote(View view){
+        Intent share=new Intent(Intent.ACTION_SEND);
+        String message;
+        message="Movie Title :\n"+title.getText().toString()+"\n"+"Released date :\n"+released.getText().toString()
+                +"\n"+"Review :\n"+rate.getText().toString()+"\n"+"Language :\n"+language.getText().toString()
+                +"\n"+"Genre :\n"+genre.getText().toString()+"\n"+"Run time :\n"+runtime.getText().toString()
+                +"\n"+"Actors :\n"+actors.getText().toString()+"\n"+"Director :\n"+director.getText().toString()
+        ;
+        share.putExtra(Intent.EXTRA_TEXT,message);
+        share.setType("text/plain");
+        startActivity(share);
+    }
+
 }

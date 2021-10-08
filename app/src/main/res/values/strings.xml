@@ -16,5 +16,6 @@
     <string name="movie_title">Movie Title</string>
     <string name="release_date">Release date</string>
     <string name="show_more">Show more..</string>
+    <string name="show_less">Show less..</string>
     <string name="movie_tale">Movie Tale</string>
 </resources>
